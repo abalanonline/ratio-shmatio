@@ -14,33 +14,22 @@
   <pre id="r"></pre>
 </div>
 <script>
+  function pad(i) {
+    return i.toString().padStart(4, " ");
+  }
   function r(a, b) {
     if (isNaN(a) || isNaN(b) || a <= 0 || b <= 0) return "";
     const r = a / b;
     let o = "";
     let error = b;
     for (let i = 1; i <= b; i++) {
-      const i1 = Math.floor(r * i);
-      const i2 = i1 + 1;
-      const e1 = Math.abs(i1 / i - r);
-      const e2 = Math.abs(i2 / i - r);
-      let i0 = 0;
-      let e0 = 0;
-      if (e2 < error) {
-        i0 = i2;
-        e0 = e2;
-        error = e2;
-      }
-      if (e1 < error) {
-        i0 = i1;
-        e0 = e1;
-        error = e1;
-      }
-      if (i0 > 0 && error < 0.01) {
-        let c = (i0 / i - r) * 1200;
-        c = c > 0 ? "+" + c.toFixed(3) : c.toFixed(3);
-        o += i0.toString().padStart(4, " ") + " /" + i.toString().padStart(4, " ") + "  " + c + "\n";
-      }
+      const n = Math.round(i * r);
+      const e = Math.abs(n / i - r);
+      if (e > 0.01 || e >= error) continue;
+      error = e;
+      let c = (n / i - r) * 1200;
+      c = c > 0 ? "+" + c.toFixed(3) : c.toFixed(3);
+      o += pad(n) + " /" + pad(i) + "  " + c + "\n";
       if (error < 0.0001) break;
     }
     return o;
