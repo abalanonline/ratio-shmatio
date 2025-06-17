@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>ratio</title>
+<style>
+  #d {margin: auto; width: 50%;}
+  #a, #b {font-size: 150%;}
+  #r {font-size: 200%;}
+</style>
+</head>
+<body>
+<div id="d">
+  <input type="number" id="a" min="0">
+  <input type="number" id="b" min="0">
+  <pre id="r"></pre>
+</div>
+<script>
+  function r(a, b) {
+    if (isNaN(a) || isNaN(b) || a <= 0 || b <= 0) return "";
+    const r = a / b;
+    let o = "";
+    let error = b;
+    for (let i = 1; i <= b; i++) {
+      const i1 = Math.floor(r * i);
+      const i2 = i1 + 1;
+      const e1 = Math.abs(i1 / i - r);
+      const e2 = Math.abs(i2 / i - r);
+      let i0 = 0;
+      let e0 = 0;
+      if (e2 < error) {
+        i0 = i2;
+        e0 = e2;
+        error = e2;
+      }
+      if (e1 < error) {
+        i0 = i1;
+        e0 = e1;
+        error = e1;
+      }
+      if (i0 > 0 && error < 0.01) {
+        let c = (i0 / i - r) * 1200;
+        c = c > 0 ? "+" + c.toFixed(3) : c.toFixed(3);
+        o += i0.toString().padStart(4, " ") + " /" + i.toString().padStart(4, " ") + "  " + c + "\n";
+      }
+      if (error < 0.0001) break;
+    }
+    return o;
+  }
+  function s() {
+    const a = parseInt(document.getElementById("a").value);
+    const b = parseInt(document.getElementById("b").value);
+    document.getElementById("r").innerHTML = r(a, b);
+  }
+  document.getElementById("a").addEventListener("input", s);
+  document.getElementById("b").addEventListener("input", s);
+</script>
+</body>
+</html>
